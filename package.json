@@ -12,6 +12,7 @@
     "postinstall": "patch-package"
   },
   "dependencies": {
+    "@apollo/client": "3.4.15",
     "@react-native-community/blur": "3.6.0",
     "@react-navigation/bottom-tabs": "6.0.7",
     "@react-navigation/native": "6.0.4",
@@ -20,6 +21,7 @@
     "@types/react-redux": "^7.1.18",
     "@types/redux": "^3.6.0",
     "@types/redux-saga": "^0.10.5",
+    "graphql": "15.6.0",
     "lodash": "4.17.21",
     "patch-package": "^6.4.7",
     "react": "17.0.2",
