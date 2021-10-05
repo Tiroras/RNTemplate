@@ -1,10 +1,10 @@
 import React from 'react'
-import { Text, View } from 'react-native'
+import { ScrollView, Text } from 'react-native'
 
 export const CharacterScreen = () => {
   return (
-    <View>
+    <ScrollView>
       <Text>Character</Text>
-    </View>
+    </ScrollView>
   )
 }
