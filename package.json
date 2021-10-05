@@ -9,6 +9,7 @@
     "test": "jest",
     "lint": "eslint . --ext .js,.jsx,.ts,.tsx",
     "build:ios": "react-native bundle --entry-file index.js --platform ios --dev false --bundle-output ios/main.jsbundle --assets-dest ios",
+    "codegen": "graphql-codegen --config codegen.yml",
     "postinstall": "patch-package"
   },
   "dependencies": {
@@ -38,6 +39,11 @@
   "devDependencies": {
     "@babel/core": "7.12.9",
     "@babel/runtime": "7.12.5",
+    "@graphql-codegen/cli": "2.2.0",
+    "@graphql-codegen/introspection": "2.1.0",
+    "@graphql-codegen/typescript": "2.2.2",
+    "@graphql-codegen/typescript-operations": "2.1.6",
+    "@graphql-codegen/typescript-react-apollo": "3.1.4",
     "@react-native-community/eslint-config": "2.0.0",
     "@types/jest": "26.0.23",
     "@types/lodash": "4.14.175",
