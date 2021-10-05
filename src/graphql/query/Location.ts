@@ -1,29 +1,27 @@
 import { gql } from '@apollo/client'
 
+import { CHARACTER_FRAGMENT, LOCATION_FRAGMENT } from '../fragments/Fragments'
+
 export const GET_LIST_OF_LOCATIONS = gql`
+  ${LOCATION_FRAGMENT}
   query Locations($page: number) {
     locations(page: $page) {
       results {
-        id
-        name
-        type
+        ...CoreLocationFields
       }
     }
   }
 `
 
 export const GET_LOCATION = gql`
+  ${LOCATION_FRAGMENT}
+  ${CHARACTER_FRAGMENT}
   query Location($id: number) {
     location(id: $id) {
-      name
-      id
-      type
+      ...CoreLocationFields
       dimension
       residents {
-        id
-        name
-        status
-        image
+        ...CoreCharacterFields
       }
     }
   }

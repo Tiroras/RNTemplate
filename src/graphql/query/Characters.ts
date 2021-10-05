@@ -1,26 +1,23 @@
 import { gql } from '@apollo/client'
 
+import { CHARACTER_FRAGMENT } from '../fragments/Fragments'
+
 export const GET_LIST_OF_CHARACTERS = gql`
+  ${CHARACTER_FRAGMENT}
   query Characters($page: number) {
     characters(page: $page) {
       results {
-        id
-        name
-        status
-        gender
-        image
+        ...CoreCharacterFields
       }
     }
   }
 `
 
 export const GET_CHARACTER = gql`
+  ${CHARACTER_FRAGMENT}
   query Character($character_id: number) {
     character(id: $character_id) {
-      id
-      name
-      status
-      gender
+      ...CoreCharacterFields
       species
       origin {
         id
