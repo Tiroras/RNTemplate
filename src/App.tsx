@@ -4,7 +4,7 @@ import { NavigationContainer } from '@react-navigation/native'
 
 import { RootNavigation } from 'src/navigation/root'
 
-import { client } from './api/client'
+import { client } from './graphql/client'
 import { AlertProvider } from './modules/alert-context'
 
 export const App = () => {
