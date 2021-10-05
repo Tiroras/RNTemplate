@@ -1,6 +1,6 @@
 import { gql } from '@apollo/client'
 
-import { CHARACTER_FRAGMENT } from '../fragments/Fragments'
+import { CHARACTER_FRAGMENT } from '../fragments/fragments'
 
 export const GET_LIST_OF_CHARACTERS = gql`
   ${CHARACTER_FRAGMENT}
