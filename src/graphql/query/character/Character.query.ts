@@ -21,6 +21,7 @@ export const GET_CHARACTER = gql`
       name
       status
       gender
+      species
       origin {
         id
         name
