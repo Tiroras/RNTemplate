@@ -212,7 +212,7 @@ export type CharactersQueryVariables = Exact<{
 }>;
 
 
-export type CharactersQuery = { __typename?: 'Query', characters?: { __typename?: 'Characters', results?: Array<{ __typename?: 'Character', id?: string | null | undefined, name?: string | null | undefined, status?: string | null | undefined, gender?: string | null | undefined, image?: string | null | undefined } | null | undefined> | null | undefined } | null | undefined };
+export type CharactersQuery = { __typename?: 'Query', characters?: { __typename?: 'Characters', info?: { __typename?: 'Info', pages?: number | null | undefined } | null | undefined, results?: Array<{ __typename?: 'Character', id?: string | null | undefined, name?: string | null | undefined, status?: string | null | undefined, gender?: string | null | undefined, image?: string | null | undefined } | null | undefined> | null | undefined } | null | undefined };
 
 export type CharacterQueryVariables = Exact<{
   character_id: Scalars['ID'];
@@ -276,6 +276,9 @@ export const CoreLocationFieldsFragmentDoc = gql`
 export const CharactersDocument = gql`
     query Characters($page: Int) {
   characters(page: $page) {
+    info {
+      pages
+    }
     results {
       ...CoreCharacterFields
     }
