@@ -1,11 +1,16 @@
 import React from 'react'
-import { ApolloProvider } from '@apollo/client'
+import { ApolloClient, ApolloProvider, InMemoryCache } from '@apollo/client'
 import { NavigationContainer } from '@react-navigation/native'
 
 import { RootNavigation } from 'src/navigation/root'
 
-import { client } from './graphql/client'
+//import { client } from './graphql/client'
 import { AlertProvider } from './modules/alert-context'
+
+const client = new ApolloClient({
+  uri: 'https://rickandmortyapi.com/graphql',
+  cache: new InMemoryCache(),
+})
 
 export const App = () => {
   return (
