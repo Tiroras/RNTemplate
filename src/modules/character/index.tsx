@@ -5,9 +5,9 @@ import styled from 'styled-components/native'
 
 import { GET_LIST_OF_CHARACTERS } from 'src/graphql/queries/character'
 import { colors } from 'src/theme/colors'
-import { Character, Characters } from 'src/utils/types/character/character'
 
 import { CharacterElement } from './list-element/character-element'
+import { Character, Characters } from './types'
 
 const ListOfCharacters = styled.View`
   flex-direction: row;
