@@ -61,7 +61,7 @@ export const CharacterScreen = () => {
   }, [data?.characters.info.pages, data?.characters.results, loading])
 
   if (loading) return <ActivityIndicator size="large" color={colors.purple} />
-  if (error) return `Error: ${error.message}`
+  if (error) return <Text>{`Error: ${error.message}`}</Text>
   if (!characters) return null
 
   const prevHandler = () => {
