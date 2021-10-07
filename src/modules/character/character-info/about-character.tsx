@@ -22,7 +22,7 @@ interface IProps {
   }
 }
 
-export const CharacterInformation = (props: IProps) => {
+export const AboutCharacter = (props: IProps) => {
   return (
     <View>
       <Text>Information</Text>

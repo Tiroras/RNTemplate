@@ -13,7 +13,7 @@ import { GET_CHARACTER } from 'src/graphql/queries/character'
 import { colors } from 'src/theme/colors'
 
 import { CharacterInfoType } from '../types'
-import { CharacterInformation } from './information/information'
+import { AboutCharacter } from './about-character'
 
 interface IProps {
   id: number
@@ -52,7 +52,7 @@ export const CharacterInfo = ({ id }: IProps) => {
           </View>
         </View>
       </View>
-      <CharacterInformation
+      <AboutCharacter
         gender={character.gender}
         type={character.type}
         origin={character.origin.name}
