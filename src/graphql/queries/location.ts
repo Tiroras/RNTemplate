@@ -6,6 +6,9 @@ export const GET_LIST_OF_LOCATIONS = gql`
   ${LOCATION_FRAGMENT}
   query Locations($page: Int) {
     locations(page: $page) {
+      info {
+        pages
+      }
       results {
         ...CoreLocationFields
       }
