@@ -1,5 +1,8 @@
 export type Episodes = {
   episodes: {
+    info: {
+      pages: number
+    }
     results: Episode[]
   }
 }

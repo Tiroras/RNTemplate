@@ -6,6 +6,9 @@ export const GET_LIST_OF_EPISODES = gql`
   ${EPISODE_FRAGMENT}
   query Episodes($page: Int) {
     episodes(page: $page) {
+      info {
+        pages
+      }
       results {
         ...CoreEpisodeFields
       }
