@@ -6,7 +6,7 @@ import styled from 'styled-components/native'
 import { GET_LIST_OF_EPISODES } from 'src/graphql/queries/episode'
 import { colors } from 'src/theme/colors'
 
-import { EpisodesElement } from './element/episodes-element'
+import { EpisodesElement } from './episodes-element'
 import { Episode, Episodes } from './types'
 
 const ListOfEpisodes = styled.View`
