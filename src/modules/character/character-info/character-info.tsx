@@ -12,7 +12,7 @@ import { useQuery } from '@apollo/client'
 import { GET_CHARACTER } from 'src/graphql/queries/character'
 import { colors } from 'src/theme/colors'
 
-import { CharacterInfoType } from '../types'
+import { CharacterInfoType } from './../types'
 import { AboutCharacter } from './about-character'
 
 interface IProps {

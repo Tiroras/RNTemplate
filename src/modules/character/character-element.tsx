@@ -33,20 +33,20 @@ const Name = styled.Text`
 `
 
 interface IProps {
-  image: string
-  status: 'Alive' | 'Dead' | 'unknown'
-  name: string
+  item: {
+    image: string
+    status: 'Alive' | 'Dead' | 'unknown'
+    name: string
+  }
 }
 
-export const CharacterElement: React.FC<IProps> = (props) => {
+export const CharacterElement = ({ item }: IProps) => {
   return (
     <Element>
-      <CharacterPicture
-        source={{ uri: props.image, width: 160, height: 140 }}
-      />
+      <CharacterPicture source={{ uri: item.image, width: 160, height: 140 }} />
       <Info>
-        <Status>{props.status}</Status>
-        <Name>{props.name}</Name>
+        <Status>{item.status}</Status>
+        <Name>{item.name}</Name>
       </Info>
     </Element>
   )

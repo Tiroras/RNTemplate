@@ -2,8 +2,10 @@ export type Characters = {
   characters: {
     info: {
       pages: number
+      next: number
     }
     results: Character[]
+    __typename: string
   }
 }
 

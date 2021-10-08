@@ -8,6 +8,7 @@ export const GET_LIST_OF_CHARACTERS = gql`
     characters(page: $page) {
       info {
         pages
+        next
       }
       results {
         ...CoreCharacterFields
