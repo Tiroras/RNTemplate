@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React from 'react'
 import {
   ActivityIndicator,
   Image,
@@ -7,12 +7,10 @@ import {
   Text,
   View,
 } from 'react-native'
-import { useQuery } from '@apollo/client'
 
-import { GET_CHARACTER } from 'src/graphql/queries/character'
+import { useCharacterQuery } from 'src/generated/graphql'
 import { colors } from 'src/theme/colors'
 
-import { CharacterInfoType } from './../types'
 import { AboutCharacter } from './about-character'
 
 interface IProps {
@@ -20,22 +18,13 @@ interface IProps {
 }
 
 export const CharacterInfo = ({ id }: IProps) => {
-  const [character, setCharacter] = useState<CharacterInfoType>()
-  const { loading, error, data } = useQuery(GET_CHARACTER, {
-    variables: {
-      id,
-    },
+  const { loading, error, data } = useCharacterQuery({
+    variables: { character_id: String(id) },
   })
-
-  useEffect(() => {
-    if (!loading) {
-      setCharacter(data.character)
-    }
-  }, [loading, data])
 
   if (loading) return <ActivityIndicator size="large" color={colors.purple} />
   if (error) return `Error: ${error.message}`
-  if (!character) return null
+  if (!data || !data.character) return null
 
   return (
     <ScrollView>
@@ -43,25 +32,27 @@ export const CharacterInfo = ({ id }: IProps) => {
         <View>
           <ImageBackground
             source={{ uri: 'assets/images/character/background.png' }}>
-            <Image source={{ uri: character.image }} />
+            {data.character.image && (
+              <Image source={{ uri: data.character.image }} />
+            )}
           </ImageBackground>
           <View>
-            <Text>{character.status}</Text>
-            <Text>{character.name}</Text>
-            <Text>{character.species}</Text>
+            <Text>{data.character.status}</Text>
+            <Text>{data.character.name}</Text>
+            <Text>{data.character.species}</Text>
           </View>
         </View>
       </View>
       <AboutCharacter
-        gender={character.gender}
-        type={character.type}
-        origin={character.origin.name}
-        location={character.location}
+        gender={data.character.gender}
+        type={data.character.type}
+        origin={data.character.origin.name}
+        location={data.character.location}
       />
       <View>
         <Text>Episodes</Text>
         <View>
-          {character.episode.map((ep) => (
+          {data.character.episode.map((ep) => (
             <View key={ep.id}>
               <Text>{ep.episode}</Text>
               <Text>{ep.name}</Text>

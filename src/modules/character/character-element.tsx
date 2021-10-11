@@ -3,16 +3,20 @@ import { Image, ImageProps, Text, View } from 'react-native'
 import styled from 'styled-components/native'
 
 import { colors } from 'src/theme/colors'
+import { CoreCharacterFieldsFragment } from 'src/generated/graphql'
 
 const Element = styled.View`
   height: 220px;
   width: 160px;
   margin: 10px;
+  margin-bottom: 20px;
 `
 
 const CharacterPicture = styled.Image`
   border-top-left-radius: 10px;
   border-top-right-radius: 10px;
+  width: 160px;
+  height: 160px;
 `
 
 const Info = styled.View`
@@ -32,18 +36,22 @@ const Name = styled.Text`
   font-weight: bold;
 `
 
+type ItemType = {
+  image: string
+  status: 'Alive' | 'Dead' | 'unknown'
+  name: string
+}
+
 interface IProps {
-  item: {
-    image: string
-    status: 'Alive' | 'Dead' | 'unknown'
-    name: string
-  }
+  item: CoreCharacterFieldsFragment
 }
 
 export const CharacterElement = ({ item }: IProps) => {
+  if (!item) return null
+
   return (
     <Element>
-      <CharacterPicture source={{ uri: item.image, width: 160, height: 140 }} />
+      {item.image && <CharacterPicture source={{ uri: item.image }} />}
       <Info>
         <Status>{item.status}</Status>
         <Name>{item.name}</Name>

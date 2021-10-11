@@ -1,12 +1,15 @@
 export type Characters = {
   characters: {
-    info: {
-      pages: number
-      next: number
-    }
+    info: CharactersInfoType
     results: Character[]
     __typename: string
   }
+}
+
+export type CharactersInfoType = {
+  pages: number
+  next: number
+  count: number
 }
 
 export type Character = {
@@ -24,19 +27,25 @@ export type CharacterInfoType = {
   status: 'Alive' | 'Dead' | 'unknown'
   gender: 'Male' | 'Female' | 'unknown' | 'Genderless'
   species: string
-  origin: {
-    id: number
-    name: string
-  }
+  origin: OriginType
   type: string
-  location: {
-    id: number
-    name: string
-  }
-  episode: {
-    id: number
-    episode: string
-    air_date: string
-    name: string
-  }[]
+  location: CharLocationType
+  episode: CharEpisodeType[]
+}
+
+export type OriginType = {
+  id: number
+  name: string
+}
+
+export type CharLocationType = {
+  id: number
+  name: string
+}
+
+export type CharEpisodeType = {
+  id: number
+  episode: string
+  air_date: string
+  name: string
 }

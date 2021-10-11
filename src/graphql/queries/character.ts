@@ -9,6 +9,7 @@ export const GET_LIST_OF_CHARACTERS = gql`
       info {
         pages
         next
+        count
       }
       results {
         ...CoreCharacterFields
