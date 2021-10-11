@@ -8,6 +8,8 @@ export const GET_LIST_OF_EPISODES = gql`
     episodes(page: $page) {
       info {
         pages
+        next
+        count
       }
       results {
         ...CoreEpisodeFields

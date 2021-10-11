@@ -1,20 +1,20 @@
 import React, { useEffect, useState } from 'react'
 import { ActivityIndicator, Button, ScrollView, Text, View } from 'react-native'
-import { useQuery } from '@apollo/client'
 import styled from 'styled-components/native'
 
+import { useEpisodesQuery } from 'src/generated/graphql'
 import { GET_LIST_OF_EPISODES } from 'src/graphql/queries/episode'
 import { colors } from 'src/theme/colors'
 
 import { EpisodesElement } from './episodes-element'
-import { Episode, Episodes } from './types'
+import { Episode } from './types'
 
 const ListOfEpisodes = styled.View`
   background-color: ${colors.white};
 `
 
 const Season = styled.Text`
-  font-size: 20;
+  font-size: 20px;
   font-weight: bold;
   color: ${colors.gray[0]};
   padding: 10px;
@@ -44,34 +44,24 @@ const SeasonEpisodes = styled.View`
 `
 
 export const EpisodeScreen = () => {
-  const [episodes, setEpisodes] = useState<Episode[]>()
   const [first_season, setFirstSeason] = useState<Episode[]>([])
   const [second_season, setSecondSeason] = useState<Episode[]>([])
   const [third_season, setThirdSeason] = useState<Episode[]>([])
   const [fourth_season, setFourthSeason] = useState<Episode[]>([])
   const [fith_season, setFifthSeason] = useState<Episode[]>([])
   const [page, setPage] = useState(1)
-  const [maxPage, setMaxPage] = useState(1)
-  const { loading, error, data } = useQuery<Episodes>(GET_LIST_OF_EPISODES, {
-    variables: {
-      page,
-    },
-  })
+  const { loading, error, data, fetchMore } = useEpisodesQuery()
 
   useEffect(() => {
-    if (!loading) setEpisodes(data?.episodes.results)
-    if (data?.episodes.info.pages) setMaxPage(data?.episodes.info.pages)
-  }, [data?.episodes.info.pages, data?.episodes.results, loading])
-
-  useEffect(() => {
-    if (episodes) {
+    if (data?.episodes?.results) {
+      const episodes = data.episodes.results
       setFirstSeason(episodes.filter((ep) => ep.episode.includes('S01')))
       setSecondSeason(episodes.filter((ep) => ep.episode.includes('S02')))
       setThirdSeason(episodes.filter((ep) => ep.episode.includes('S03')))
       setFourthSeason(episodes.filter((ep) => ep.episode.includes('S04')))
       setFifthSeason(episodes.filter((ep) => ep.episode.includes('S05')))
     }
-  }, [episodes])
+  }, [data?.episodes?.results])
 
   if (loading) return <ActivityIndicator size="large" color={colors.purple} />
   if (error) return <Text>{`Error: ${error.message}`}</Text>
@@ -79,23 +69,35 @@ export const EpisodeScreen = () => {
 
   const prevPageHandler = () => {
     if (page !== 1) {
-      setPage((prevPage) => prevPage - 1)
+      setPage(page - 1)
+      fetchMore({
+        query: GET_LIST_OF_EPISODES,
+        variables: { page: page - 1 },
+      })
     }
   }
 
   const nextPageHandler = () => {
-    if (page !== maxPage) {
-      setPage((prevPage) => prevPage + 1)
+    if (page !== data.episodes?.info?.pages) {
+      setPage(page + 1)
+      fetchMore({
+        query: GET_LIST_OF_EPISODES,
+        variables: { page: page + 1 },
+      })
     }
   }
 
-  const toFirstPageHandler = () => {
-    setPage(1)
+  const pageHandler = (selectedPage: number) => () => {
+    setPage(selectedPage)
+    fetchMore({
+      query: GET_LIST_OF_EPISODES,
+      variables: { page: selectedPage },
+    })
   }
 
-  const toLastPageHandler = () => {
-    setPage(maxPage)
-  }
+  const toFirstPageHandler = pageHandler(1)
+
+  const toLastPageHandler = pageHandler(data.episodes.info.pages)
 
   return (
     <ScrollView>
@@ -180,7 +182,7 @@ export const EpisodeScreen = () => {
         <Pages>
           <Page onPress={toFirstPageHandler}>1</Page>
           <Page>{page}</Page>
-          <Page onPress={toLastPageHandler}>{maxPage}</Page>
+          <Page onPress={toLastPageHandler}>{data.episodes?.info?.pages}</Page>
         </Pages>
         <Buttons>
           <ButtonContainer>
