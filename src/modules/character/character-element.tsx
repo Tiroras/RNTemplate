@@ -9,7 +9,7 @@ const Element = styled.View`
   height: 220px;
   width: 160px;
   margin: 10px;
-  margin-bottom: 20px;
+  margin-bottom: 40px;
 `
 
 const CharacterPicture = styled.Image`
@@ -35,12 +35,6 @@ const Status = styled.Text`
 const Name = styled.Text`
   font-weight: bold;
 `
-
-type ItemType = {
-  image: string
-  status: 'Alive' | 'Dead' | 'unknown'
-  name: string
-}
 
 interface IProps {
   item: CoreCharacterFieldsFragment
