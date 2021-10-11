@@ -1,10 +1,16 @@
 export type Episodes = {
-  episodes: {
-    info: {
-      pages: number
-    }
-    results: Episode[]
-  }
+  episodes: EpisodesObject
+}
+
+export type EpisodesObject = {
+  info: EpisodesInfo
+  results: Episode[]
+}
+
+export type EpisodesInfo = {
+  pages: number
+  next: number
+  count: number
 }
 
 export type Episode = {

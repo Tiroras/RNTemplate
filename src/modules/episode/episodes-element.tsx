@@ -2,6 +2,7 @@ import React from 'react'
 import { Text, View } from 'react-native'
 import styled from 'styled-components/native'
 
+import { CoreEpisodeFieldsFragment } from 'src/generated/graphql'
 import { colors } from 'src/theme/colors'
 
 const StyledEpisode = styled.Text`
@@ -29,15 +30,14 @@ const Wrapper = styled.View`
   border-left-width: 0;
   border-right-width: 0;
   border-top-width: 0;
+  padding: 0 10px;
 `
 
-interface IProps {
-  episode: string
-  name: string
-  air_date: string
-}
-
-export const EpisodesElement = ({ episode, name, air_date }: IProps) => {
+export const EpisodesElement = ({
+  episode,
+  name,
+  air_date,
+}: CoreEpisodeFieldsFragment) => {
   return (
     <Wrapper>
       <View>

@@ -1,5 +1,11 @@
 import React, { useEffect, useState } from 'react'
-import { ActivityIndicator, Button, ScrollView, Text, View } from 'react-native'
+import {
+  ActivityIndicator,
+  Button,
+  SectionList,
+  Text,
+  View,
+} from 'react-native'
 import styled from 'styled-components/native'
 
 import { useEpisodesQuery } from 'src/generated/graphql'
@@ -9,8 +15,9 @@ import { colors } from 'src/theme/colors'
 import { EpisodesElement } from './episodes-element'
 import { Episode } from './types'
 
-const ListOfEpisodes = styled.View`
+const ListOfEpisodes = styled.SectionList`
   background-color: ${colors.white};
+  height: 90%;
 `
 
 const Season = styled.Text`
@@ -18,12 +25,12 @@ const Season = styled.Text`
   font-weight: bold;
   color: ${colors.gray[0]};
   padding: 10px;
+  margin-top: 20px;
 `
 
 const Pages = styled.View`
   flex-direction: row;
   justify-content: space-around;
-  padding: 10px;
 `
 
 const Page = styled.Text`
@@ -39,10 +46,6 @@ const ButtonContainer = styled.View`
   width: 50%;
 `
 
-const SeasonEpisodes = styled.View`
-  padding: 10px;
-`
-
 export const EpisodeScreen = () => {
   const [first_season, setFirstSeason] = useState<Episode[]>([])
   const [second_season, setSecondSeason] = useState<Episode[]>([])
@@ -51,6 +54,13 @@ export const EpisodeScreen = () => {
   const [fith_season, setFifthSeason] = useState<Episode[]>([])
   const [page, setPage] = useState(1)
   const { loading, error, data, fetchMore } = useEpisodesQuery()
+  const DATA = [
+    { title: 'Season 1', data: first_season },
+    { title: 'Season 2', data: second_season },
+    { title: 'Season 3', data: third_season },
+    { title: 'Season 4', data: fourth_season },
+    { title: 'Season 5', data: fith_season },
+  ]
 
   useEffect(() => {
     if (data?.episodes?.results) {
@@ -100,84 +110,21 @@ export const EpisodeScreen = () => {
   const toLastPageHandler = pageHandler(data.episodes.info.pages)
 
   return (
-    <ScrollView>
-      <ListOfEpisodes>
-        {first_season.length !== 0 && (
-          <View>
-            <Season>Season 1</Season>
-            <SeasonEpisodes>
-              {first_season.map((episode) => (
-                <EpisodesElement
-                  key={episode.id}
-                  name={episode.name}
-                  air_date={episode.air_date}
-                  episode={episode.episode}
-                />
-              ))}
-            </SeasonEpisodes>
-          </View>
+    <View>
+      <ListOfEpisodes
+        sections={DATA}
+        renderItem={({ item }) => (
+          <EpisodesElement
+            key={item.id}
+            episode={item.episode}
+            air_date={item.air_date}
+            name={item.name}
+          />
         )}
-        {second_season.length !== 0 && (
-          <View>
-            <Season>Season 2</Season>
-            <SeasonEpisodes>
-              {second_season.map((episode) => (
-                <EpisodesElement
-                  key={episode.id}
-                  name={episode.name}
-                  air_date={episode.air_date}
-                  episode={episode.episode}
-                />
-              ))}
-            </SeasonEpisodes>
-          </View>
-        )}
-        {third_season.length !== 0 && (
-          <View>
-            <Season>Season 3</Season>
-            <SeasonEpisodes>
-              {third_season.map((episode) => (
-                <EpisodesElement
-                  key={episode.id}
-                  name={episode.name}
-                  air_date={episode.air_date}
-                  episode={episode.episode}
-                />
-              ))}
-            </SeasonEpisodes>
-          </View>
-        )}
-        {fourth_season.length !== 0 && (
-          <View>
-            <Season>Season 4</Season>
-            <SeasonEpisodes>
-              {fourth_season.map((episode) => (
-                <EpisodesElement
-                  key={episode.id}
-                  name={episode.name}
-                  air_date={episode.air_date}
-                  episode={episode.episode}
-                />
-              ))}
-            </SeasonEpisodes>
-          </View>
-        )}
-        {fith_season.length !== 0 && (
-          <View>
-            <Season>Season 5</Season>
-            <SeasonEpisodes>
-              {fith_season.map((episode) => (
-                <EpisodesElement
-                  key={episode.id}
-                  name={episode.name}
-                  air_date={episode.air_date}
-                  episode={episode.episode}
-                />
-              ))}
-            </SeasonEpisodes>
-          </View>
-        )}
-      </ListOfEpisodes>
+        renderSectionHeader={({ section }) =>
+          section.data.length !== 0 ? <Season>{section.title}</Season> : null
+        }
+      />
       <View>
         <Pages>
           <Page onPress={toFirstPageHandler}>1</Page>
@@ -201,6 +148,6 @@ export const EpisodeScreen = () => {
           </ButtonContainer>
         </Buttons>
       </View>
-    </ScrollView>
+    </View>
   )
 }
