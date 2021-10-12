@@ -240,7 +240,7 @@ export type LocationsQueryVariables = Exact<{
 }>;
 
 
-export type LocationsQuery = { __typename?: 'Query', locations?: { __typename?: 'Locations', results?: Array<{ __typename?: 'Location', id?: string | null | undefined, name?: string | null | undefined, type?: string | null | undefined } | null | undefined> | null | undefined } | null | undefined };
+export type LocationsQuery = { __typename?: 'Query', locations?: { __typename?: 'Locations', info?: { __typename?: 'Info', pages?: number | null | undefined, next?: number | null | undefined, count?: number | null | undefined } | null | undefined, results?: Array<{ __typename?: 'Location', id?: string | null | undefined, name?: string | null | undefined, type?: string | null | undefined } | null | undefined> | null | undefined } | null | undefined };
 
 export type LocationQueryVariables = Exact<{
   id: Scalars['ID'];
@@ -440,6 +440,11 @@ export type EpisodeQueryResult = Apollo.QueryResult<EpisodeQuery, EpisodeQueryVa
 export const LocationsDocument = gql`
     query Locations($page: Int) {
   locations(page: $page) {
+    info {
+      pages
+      next
+      count
+    }
     results {
       ...CoreLocationFields
     }

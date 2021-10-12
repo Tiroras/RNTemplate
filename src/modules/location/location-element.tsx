@@ -3,6 +3,7 @@ import { Text, View } from 'react-native'
 import styled from 'styled-components/native'
 
 import { colors } from 'src/theme/colors'
+import { CoreLocationFieldsFragment } from 'src/generated/graphql'
 
 const Type = styled.Text`
   color: ${colors.gray[0]};
@@ -25,15 +26,14 @@ const Wrapper = styled.View`
 `
 
 interface IProps {
-  name: string
-  type: string
+  item: CoreLocationFieldsFragment
 }
 
-export const LocationElement = ({ name, type }: IProps) => {
+export const LocationElement = ({ item }: IProps) => {
   return (
     <Wrapper>
-      <Type>{type}</Type>
-      <Name>{name}</Name>
+      <Type>{item.type}</Type>
+      <Name>{item.name}</Name>
     </Wrapper>
   )
 }

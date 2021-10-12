@@ -8,6 +8,8 @@ export const GET_LIST_OF_LOCATIONS = gql`
     locations(page: $page) {
       info {
         pages
+        next
+        count
       }
       results {
         ...CoreLocationFields

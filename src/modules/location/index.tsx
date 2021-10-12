@@ -1,18 +1,16 @@
-import React, { useEffect, useState } from 'react'
-import { ActivityIndicator, Button, ScrollView, Text, View } from 'react-native'
-import { useQuery } from '@apollo/client'
+import React, { useState } from 'react'
+import { ActivityIndicator, Button, Text, View } from 'react-native'
 import styled from 'styled-components/native'
 
+import { useLocationsQuery } from 'src/generated/graphql'
 import { GET_LIST_OF_LOCATIONS } from 'src/graphql/queries/location'
 import { colors } from 'src/theme/colors'
 
-import { LocationElement } from './location-element/location-element'
-import { Location, Locations } from './types'
+import { LocationElement } from './location-element'
 
-const ListOfLocations = styled.View`
+const ListOfLocations = styled.FlatList`
   background-color: ${colors.white};
-  flex-direction: row;
-  flex-wrap: wrap;
+  height: 90%;
 `
 
 const Buttons = styled.View`
@@ -30,7 +28,6 @@ const Pagination = styled.View`
 const Pages = styled.View`
   flex-direction: row;
   justify-content: space-around;
-  padding: 5px;
 `
 
 const Page = styled.Text`
@@ -39,53 +36,62 @@ const Page = styled.Text`
 `
 
 export const LocationScreen = () => {
-  const [locations, setLocations] = useState<Location[]>()
   const [page, setPage] = useState(1)
-  const [maxPage, setMaxPage] = useState(1)
-  const { loading, error, data } = useQuery<Locations>(GET_LIST_OF_LOCATIONS)
-
-  useEffect(() => {
-    if (!loading) setLocations(data?.locations.results)
-    if (data?.locations.info.pages) setMaxPage(data?.locations.info.pages)
-  }, [data?.locations.info.pages, data?.locations.results, loading])
+  const { loading, error, data, fetchMore } = useLocationsQuery()
 
   if (loading) return <ActivityIndicator size="large" color={colors.purple} />
   if (error) return <Text>{`Error: ${error.message}`}</Text>
-  if (!locations) return null
+  if (!data?.locations?.results) return null
 
   const prevHandler = () => {
     if (page !== 1) {
-      setPage((prevPage) => prevPage - 1)
+      setPage(page - 1)
+      fetchMore({
+        query: GET_LIST_OF_LOCATIONS,
+        variables: { page: page - 1 },
+      })
     }
   }
 
   const nextHandler = () => {
-    if (page !== maxPage) {
-      setPage((prevPage) => prevPage + 1)
+    if (page !== data.locations.info?.pages) {
+      setPage(page + 1)
+      fetchMore({
+        query: GET_LIST_OF_LOCATIONS,
+        variables: { page: page + 1 },
+      })
     }
   }
 
-  const toFirstPageHandler = () => {
-    setPage(1)
+  const pageHandler = (selectedPage: number) => () => {
+    setPage(selectedPage)
+    fetchMore({
+      query: GET_LIST_OF_LOCATIONS,
+      variables: { page: selectedPage },
+    })
   }
 
-  const toLastPageHandler = () => {
-    setPage(maxPage)
-  }
+  const toFirstPageHandler = pageHandler(1)
+
+  const toLastPageHandler = pageHandler(data.locations.info?.pages)
 
   return (
-    <ScrollView>
-      <ListOfLocations>
-        {locations.map((loc) => (
-          <LocationElement key={loc.id} name={loc.name} type={loc.type} />
-        ))}
-      </ListOfLocations>
+    <View>
+      <ListOfLocations
+        data={data.locations.results}
+        renderItem={LocationElement}
+        keyExtractor={(item) => item.id}
+        horizontal={false}
+        numColumns={2}
+      />
       <View>
         <Pagination>
           <Pages>
             <Page onPress={toFirstPageHandler}>1</Page>
             <Page>{page}</Page>
-            <Page onPress={toLastPageHandler}>{maxPage}</Page>
+            <Page onPress={toLastPageHandler}>
+              {data.locations.info?.pages}
+            </Page>
           </Pages>
           <Buttons>
             <ButtonContainer>
@@ -105,6 +111,6 @@ export const LocationScreen = () => {
           </Buttons>
         </Pagination>
       </View>
-    </ScrollView>
+    </View>
   )
 }
