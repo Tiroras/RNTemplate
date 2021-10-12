@@ -50,32 +50,42 @@ export const EpisodeScreen = () => {
   const [page, setPage] = useState(1)
   const { loading, error, data, fetchMore } = useEpisodesQuery()
 
-  if (loading) return <ActivityIndicator size="large" color={colors.purple} />
-  if (error) return <Text>{`Error: ${error.message}`}</Text>
-  if (!data || !data.episodes || !data.episodes.results) return null
-
   const DATA = [
     {
       title: 'Season 1',
-      data: data.episodes.results.filter((ep) => ep?.episode?.includes('S01')),
+      data: data?.episodes?.results?.filter((ep) =>
+        ep?.episode?.includes('S01'),
+      ),
     },
     {
       title: 'Season 2',
-      data: data.episodes.results.filter((ep) => ep?.episode?.includes('S02')),
+      data: data?.episodes?.results?.filter((ep) =>
+        ep?.episode?.includes('S02'),
+      ),
     },
     {
       title: 'Season 3',
-      data: data.episodes.results.filter((ep) => ep?.episode?.includes('S03')),
+      data: data?.episodes?.results?.filter((ep) =>
+        ep?.episode?.includes('S03'),
+      ),
     },
     {
       title: 'Season 4',
-      data: data.episodes.results.filter((ep) => ep?.episode?.includes('S04')),
+      data: data?.episodes?.results?.filter((ep) =>
+        ep?.episode?.includes('S04'),
+      ),
     },
     {
       title: 'Season 5',
-      data: data.episodes.results.filter((ep) => ep?.episode?.includes('S05')),
+      data: data?.episodes?.results?.filter((ep) =>
+        ep?.episode?.includes('S05'),
+      ),
     },
   ]
+
+  if (loading) return <ActivityIndicator size="large" color={colors.purple} />
+  if (error) return <Text>{`Error: ${error.message}`}</Text>
+  if (!data) return null
 
   const prevPageHandler = () => {
     if (page !== 1) {
