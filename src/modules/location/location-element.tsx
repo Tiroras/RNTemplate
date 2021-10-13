@@ -1,9 +1,8 @@
 import React from 'react'
-import { Text, View } from 'react-native'
 import styled from 'styled-components/native'
 
-import { colors } from 'src/theme/colors'
 import { CoreLocationFieldsFragment } from 'src/generated/graphql'
+import { colors } from 'src/theme/colors'
 
 const Type = styled.Text`
   color: ${colors.gray[0]};
