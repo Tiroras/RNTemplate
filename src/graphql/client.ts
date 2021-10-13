@@ -8,6 +8,7 @@ export const client = new ApolloClient({
       Query: {
         fields: {
           locations: relayStylePagination(),
+          episodes: relayStylePagination(),
         },
       },
     },
