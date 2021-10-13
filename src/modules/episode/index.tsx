@@ -1,23 +1,16 @@
-import React, { useEffect, useState } from 'react'
-import {
-  ActivityIndicator,
-  Button,
-  SectionList,
-  Text,
-  View,
-} from 'react-native'
+import React, { useState } from 'react'
+import { ActivityIndicator, Text, View } from 'react-native'
 import styled from 'styled-components/native'
 
 import { useEpisodesQuery } from 'src/generated/graphql'
 import { GET_LIST_OF_EPISODES } from 'src/graphql/queries/episode'
 import { colors } from 'src/theme/colors'
+import { getEpisodes } from 'src/utils/getEpisodes'
 
 import { EpisodesElement } from './episodes-element'
-import { Episode } from './types'
 
 const ListOfEpisodes = styled.SectionList`
   background-color: ${colors.white};
-  height: 90%;
 `
 
 const Season = styled.Text`
@@ -28,101 +21,43 @@ const Season = styled.Text`
   margin-top: 20px;
 `
 
-const Pages = styled.View`
-  flex-direction: row;
-  justify-content: space-around;
-`
-
-const Page = styled.Text`
-  font-weight: bold;
-  font-size: 20px;
-`
-
-const Buttons = styled.View`
-  flex-direction: row;
-`
-
-const ButtonContainer = styled.View`
-  width: 50%;
-`
-
 export const EpisodeScreen = () => {
   const [page, setPage] = useState(1)
   const { loading, error, data, fetchMore } = useEpisodesQuery()
-
-  const DATA = [
-    {
-      title: 'Season 1',
-      data: data?.episodes?.results?.filter((ep) =>
-        ep?.episode?.includes('S01'),
-      ),
-    },
-    {
-      title: 'Season 2',
-      data: data?.episodes?.results?.filter((ep) =>
-        ep?.episode?.includes('S02'),
-      ),
-    },
-    {
-      title: 'Season 3',
-      data: data?.episodes?.results?.filter((ep) =>
-        ep?.episode?.includes('S03'),
-      ),
-    },
-    {
-      title: 'Season 4',
-      data: data?.episodes?.results?.filter((ep) =>
-        ep?.episode?.includes('S04'),
-      ),
-    },
-    {
-      title: 'Season 5',
-      data: data?.episodes?.results?.filter((ep) =>
-        ep?.episode?.includes('S05'),
-      ),
-    },
-  ]
 
   if (loading) return <ActivityIndicator size="large" color={colors.purple} />
   if (error) return <Text>{`Error: ${error.message}`}</Text>
   if (!data) return null
 
-  const prevPageHandler = () => {
-    if (page !== 1) {
-      setPage(page - 1)
-      fetchMore({
-        query: GET_LIST_OF_EPISODES,
-        variables: { page: page - 1 },
-      })
-    }
-  }
+  const episodes = getEpisodes(data.episodes.results)
 
-  const nextPageHandler = () => {
-    if (page !== data.episodes?.info?.pages) {
-      setPage(page + 1)
-      fetchMore({
-        query: GET_LIST_OF_EPISODES,
-        variables: { page: page + 1 },
-      })
-    }
-  }
-
-  const pageHandler = (selectedPage: number) => () => {
-    setPage(selectedPage)
+  const handlerEndReached = () => {
+    setPage(page + 1)
     fetchMore({
       query: GET_LIST_OF_EPISODES,
-      variables: { page: selectedPage },
+      variables: { page: page + 1 },
+      updateQuery: (prevRes, { fetchMoreResult }) => {
+        if (!fetchMoreResult) return prevRes
+        if (!prevRes) return null
+        const prevEps = prevRes.episodes?.results
+        const newEps = fetchMoreResult.episodes?.results
+        const pageInfo = fetchMoreResult.episodes?.info
+
+        return {
+          episodes: {
+            __typename: prevRes.__typename,
+            results: [...prevEps, ...newEps],
+            info: pageInfo,
+          },
+        }
+      },
     })
   }
-
-  const toFirstPageHandler = pageHandler(1)
-
-  const toLastPageHandler = pageHandler(data.episodes.info.pages)
 
   return (
     <View>
       <ListOfEpisodes
-        sections={DATA}
+        sections={episodes}
         renderItem={({ item }) => (
           <EpisodesElement
             key={item.id}
@@ -134,30 +69,8 @@ export const EpisodeScreen = () => {
         renderSectionHeader={({ section }) =>
           section.data.length !== 0 ? <Season>{section.title}</Season> : null
         }
+        onEndReached={handlerEndReached}
       />
-      <View>
-        <Pages>
-          <Page onPress={toFirstPageHandler}>1</Page>
-          <Page>{page}</Page>
-          <Page onPress={toLastPageHandler}>{data.episodes?.info?.pages}</Page>
-        </Pages>
-        <Buttons>
-          <ButtonContainer>
-            <Button
-              title="Prev"
-              color={colors.purple}
-              onPress={prevPageHandler}
-            />
-          </ButtonContainer>
-          <ButtonContainer>
-            <Button
-              title="Next"
-              color={colors.purple}
-              onPress={nextPageHandler}
-            />
-          </ButtonContainer>
-        </Buttons>
-      </View>
     </View>
   )
 }
