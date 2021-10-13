@@ -226,7 +226,7 @@ export type EpisodesQueryVariables = Exact<{
 }>;
 
 
-export type EpisodesQuery = { __typename?: 'Query', episodes?: { __typename?: 'Episodes', results?: Array<{ __typename?: 'Episode', id?: string | null | undefined, name?: string | null | undefined, air_date?: string | null | undefined, episode?: string | null | undefined } | null | undefined> | null | undefined } | null | undefined };
+export type EpisodesQuery = { __typename?: 'Query', episodes?: { __typename?: 'Episodes', info?: { __typename?: 'Info', pages?: number | null | undefined, next?: number | null | undefined, count?: number | null | undefined } | null | undefined, results?: Array<{ __typename?: 'Episode', id?: string | null | undefined, name?: string | null | undefined, air_date?: string | null | undefined, episode?: string | null | undefined } | null | undefined> | null | undefined } | null | undefined };
 
 export type EpisodeQueryVariables = Exact<{
   id: Scalars['ID'];
@@ -364,6 +364,11 @@ export type CharacterQueryResult = Apollo.QueryResult<CharacterQuery, CharacterQ
 export const EpisodesDocument = gql`
     query Episodes($page: Int) {
   episodes(page: $page) {
+    info {
+      pages
+      next
+      count
+    }
     results {
       ...CoreEpisodeFields
     }
