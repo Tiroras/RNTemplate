@@ -1,5 +1,5 @@
 import React from 'react'
-import { View } from 'react-native'
+import { Image, View } from 'react-native'
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
 
 import { CharacterScreen } from 'src/modules/character'
@@ -11,6 +11,8 @@ import { Routes } from './routes'
 const Tab = createBottomTabNavigator()
 
 export const TabBar = () => {
+  const episoceIcon = 'assets/images/icons/episode.svg'
+
   return (
     <Tab.Navigator initialRouteName={Routes.CharacterScreen}>
       <Tab.Screen
@@ -18,7 +20,9 @@ export const TabBar = () => {
         component={CharacterScreen}
         options={{
           headerTitle: 'Characters',
-          tabBarIcon: ({ focused }) => <View />,
+          tabBarIcon: ({ focused }) => (
+            <Image source={{ uri: episoceIcon, width: 50, height: 50 }} />
+          ),
         }}
       />
       <Tab.Screen

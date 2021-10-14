@@ -6,6 +6,11 @@ export const GET_LIST_OF_CHARACTERS = gql`
   ${CHARACTER_FRAGMENT}
   query Characters($page: Int) {
     characters(page: $page) {
+      info {
+        pages
+        next
+        count
+      }
       results {
         ...CoreCharacterFields
       }
